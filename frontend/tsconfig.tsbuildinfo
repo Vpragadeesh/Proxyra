@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/LogsTable.tsx","./src/components/MetricCard.tsx","./src/components/ProxyForm.tsx","./src/lib/api.ts","./src/pages/DashboardPage.tsx","./src/pages/LogsPage.tsx","./src/pages/ProxiesPage.tsx"],"version":"5.9.3"}
