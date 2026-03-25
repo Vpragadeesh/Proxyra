@@ -1,11 +1,13 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import {
   ArrowRight,
   Globe,
   Lock,
+  Moon,
   PlayCircle,
   Shield,
   Sparkles,
+  Sun,
   Wifi,
 } from 'lucide-react';
 
@@ -91,6 +93,14 @@ export default function App() {
   const [activeRegion, setActiveRegion] = useState<Region>(regions[0]);
   const [submittedUrl, setSubmittedUrl] = useState('');
   const [error, setError] = useState('');
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('proxyra-theme');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('proxyra-theme', JSON.stringify(isDark));
+  }, [isDark]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -108,80 +118,87 @@ export default function App() {
   }
 
   return (
-    <div className="relative overflow-hidden text-slate-950">
-      <div className="absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_top,rgba(29,78,216,0.16),transparent_48%),linear-gradient(180deg,#f7f4ea_0%,#efe7d2_100%)]" />
-      <div className="absolute right-[-12rem] top-24 -z-10 h-80 w-80 rounded-full bg-[#e07131]/20 blur-3xl" />
-      <div className="absolute left-[-8rem] top-72 -z-10 h-72 w-72 rounded-full bg-[#2f5fd0]/20 blur-3xl" />
+    <div className={isDark ? 'dark' : ''}>
+      <div className="relative overflow-hidden text-slate-950 dark:text-slate-50 bg-white dark:bg-slate-950 transition-colors">
+        <div className="absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_top,rgba(29,78,216,0.16),transparent_48%),linear-gradient(180deg,#f7f4ea_0%,#efe7d2_100%)] dark:bg-[radial-gradient(circle_at_top,rgba(29,78,216,0.1),transparent_48%),linear-gradient(180deg,#1e293b_0%,#0f172a_100%)]" />
+        <div className="absolute right-[-12rem] top-24 -z-10 h-80 w-80 rounded-full bg-[#e07131]/20 dark:bg-[#e07131]/10 blur-3xl" />
+        <div className="absolute left-[-8rem] top-72 -z-10 h-72 w-72 rounded-full bg-[#2f5fd0]/20 dark:bg-[#2f5fd0]/10 blur-3xl" />
 
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-[#2f5fd0]">Proxyra</div>
-          <div className="mt-1 text-2xl font-semibold tracking-tight">Free Web Proxy</div>
-        </div>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
-          <a href="#use-cases" className="transition hover:text-slate-950">
-            Use cases
-          </a>
-          <a href="#advantages" className="transition hover:text-slate-950">
-            Advantages
-          </a>
-          <a href="#faq" className="transition hover:text-slate-950">
-            FAQ
-          </a>
-          <a href="/dashboard" className="rounded-full bg-[#2f5fd0] px-4 py-2 text-white transition hover:bg-[#2547a8]">
-            Dashboard
-          </a>
-        </nav>
-      </header>
+        <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-[0.35em] text-[#2f5fd0]">Proxyra</div>
+            <div className="mt-1 text-2xl font-semibold tracking-tight">Free Web Proxy</div>
+          </div>
+          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-300 md:flex">
+            <a href="#use-cases" className="transition hover:text-slate-950 dark:hover:text-white">
+              Use cases
+            </a>
+            <a href="#advantages" className="transition hover:text-slate-950 dark:hover:text-white">
+              Advantages
+            </a>
+            <a href="#faq" className="transition hover:text-slate-950 dark:hover:text-white">
+              FAQ
+            </a>
+            <a href="/dashboard" className="rounded-full bg-[#2f5fd0] px-4 py-2 text-white transition hover:bg-[#2547a8]">
+              Dashboard
+            </a>
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="rounded-full p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+          </nav>
+        </header>
 
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-4 pb-20 pt-8 sm:px-6 lg:px-8">
         <section className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/70 px-4 py-2 text-sm text-slate-700 shadow-sm backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 dark:border-slate-700/30 bg-white/70 dark:bg-slate-900/50 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 shadow-sm backdrop-blur">
               <Sparkles size={16} className="text-[#2f5fd0]" />
               Browse fast and anonymously
             </div>
             <h1 className="mt-6 max-w-xl text-5xl font-semibold leading-[1.02] tracking-[-0.04em] sm:text-6xl">
-              Proxyium-style web proxy landing page for quick browser access.
+              Web proxy landing page for quick browser access.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-700">
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-700 dark:text-slate-300">
               Open restricted websites from a clean web interface, choose a region, and start a proxy session without
-              installing extra software. This replica keeps the public landing experience and form flow in the
-              frontend.
+              installing extra software.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-700">
-              <div className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2">No client install</div>
-              <div className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2">Region switcher</div>
-              <div className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2">Frontend demo flow</div>
+            <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-700 dark:text-slate-300">
+              <div className="rounded-full border border-slate-900/10 dark:border-slate-700/30 bg-white/80 dark:bg-slate-800/50 px-4 py-2">No client install</div>
+              <div className="rounded-full border border-slate-900/10 dark:border-slate-700/30 bg-white/80 dark:bg-slate-800/50 px-4 py-2">Region switcher</div>
+              <div className="rounded-full border border-slate-900/10 dark:border-slate-700/30 bg-white/80 dark:bg-slate-800/50 px-4 py-2">Frontend demo flow</div>
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-slate-900/10 bg-white/80 p-6 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-8">
+          <div className="rounded-[2rem] border border-slate-900/10 dark:border-slate-700/30 bg-white/80 dark:bg-slate-900/50 p-6 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)] dark:shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)] backdrop-blur-sm sm:p-8">
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-[#2f5fd0] p-3 text-white">
                 <PlayCircle size={24} />
               </div>
               <div>
-                <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Start Browsing</div>
+                <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Start Browsing</div>
                 <div className="mt-1 text-2xl font-semibold tracking-tight">Launch a session</div>
               </div>
             </div>
 
             <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-slate-700">Website URL</span>
+                <span className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Website URL</span>
                 <input
                   type="text"
                   value={url}
                   onChange={(event) => setUrl(event.target.value)}
                   placeholder="Enter URL or search term"
-                  className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-4 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#2f5fd0] focus:bg-white"
+                  className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-4 py-4 text-base text-slate-950 dark:text-white outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-[#2f5fd0] focus:bg-white dark:focus:bg-slate-700"
                 />
               </label>
 
               <div>
-                <div className="mb-2 text-sm font-medium text-slate-700">Country</div>
+                <div className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Country</div>
                 <div className="grid gap-3">
                   {regions.map((region) => {
                     const isActive = region.id === activeRegion.id;
@@ -193,16 +210,16 @@ export default function App() {
                         className={`flex items-center justify-between rounded-2xl border px-4 py-4 text-left transition ${
                           isActive
                             ? 'border-[#2f5fd0] bg-[#2f5fd0] text-white'
-                            : 'border-slate-200 bg-slate-50 text-slate-800 hover:border-slate-300 hover:bg-white'
+                            : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-700'
                         }`}
                       >
                         <div>
                           <div className="font-medium">{region.label}</div>
-                          <div className={`text-sm ${isActive ? 'text-blue-100' : 'text-slate-500'}`}>{region.badge}</div>
+                          <div className={`text-sm ${isActive ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'}`}>{region.badge}</div>
                         </div>
                         <div
                           className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${
-                            isActive ? 'bg-white/15 text-white' : 'bg-slate-200 text-slate-700'
+                            isActive ? 'bg-white/15 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                           }`}
                         >
                           {region.speed}
@@ -222,19 +239,19 @@ export default function App() {
               </button>
             </form>
 
-            <p className="mt-4 text-sm leading-6 text-slate-500">
+            <p className="mt-4 text-sm leading-6 text-slate-500 dark:text-slate-400">
               By using the web proxy you accept the browsing policy and understand upstream sites may behave differently
               depending on CSP, cookies, and anti-bot protections.
             </p>
 
             {error ? (
-              <div className="mt-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm text-rose-900">
+              <div className="mt-6 rounded-2xl border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/30 px-4 py-4 text-sm text-rose-900 dark:text-rose-300">
                 {error}
               </div>
             ) : null}
 
             {submittedUrl && !error ? (
-              <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-900">
+              <div className="mt-6 rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-4 text-sm text-emerald-900 dark:text-emerald-300">
                 Session prepared for <span className="font-semibold">{submittedUrl}</span> via{' '}
                 <span className="font-semibold">{activeRegion.label}</span>. Redirecting through the Rocket proxy
                 backend now.
@@ -247,19 +264,19 @@ export default function App() {
           {featureCards.map(({ title, description, icon: Icon }) => (
             <article
               key={title}
-              className="rounded-[1.75rem] border border-slate-900/10 bg-white/70 p-6 shadow-[0_20px_50px_-35px_rgba(15,23,42,0.35)]"
+              className="rounded-[1.75rem] border border-slate-900/10 dark:border-slate-700/30 bg-white/70 dark:bg-slate-900/50 p-6 shadow-[0_20px_50px_-35px_rgba(15,23,42,0.35)] dark:shadow-[0_20px_50px_-35px_rgba(0,0,0,0.6)]"
             >
-              <div className="inline-flex rounded-2xl bg-slate-950 p-3 text-white">
+              <div className="inline-flex rounded-2xl bg-slate-950 dark:bg-slate-800 p-3 text-white">
                 <Icon size={22} />
               </div>
               <h2 className="mt-5 text-2xl font-semibold tracking-tight">{title}</h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600">{description}</p>
+              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-400">{description}</p>
             </article>
           ))}
         </section>
 
         <section className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <div id="use-cases" className="rounded-[2rem] bg-slate-950 px-6 py-8 text-white sm:px-8">
+          <div id="use-cases" className="rounded-[2rem] bg-slate-950 dark:bg-slate-900 px-6 py-8 text-white sm:px-8">
             <div className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-200">Use Cases</div>
             <h2 className="mt-4 text-4xl font-semibold tracking-tight">Where the user will use the proxy</h2>
             <p className="mt-4 max-w-md text-sm leading-7 text-slate-300">
@@ -268,7 +285,7 @@ export default function App() {
             </p>
             <div className="mt-8 space-y-3">
               {useCases.map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/5 px-4 py-4">
+                <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/5 dark:bg-white/5 px-4 py-4">
                   <Wifi size={18} className="text-blue-300" />
                   <span className="text-sm font-medium text-slate-100">{item}</span>
                 </div>
@@ -277,17 +294,17 @@ export default function App() {
           </div>
 
           <div className="grid gap-5">
-            <article className="rounded-[2rem] border border-slate-900/10 bg-[#fff7ed] p-6">
-              <div className="text-sm font-semibold uppercase tracking-[0.3em] text-[#c85c22]">How it works</div>
-              <p className="mt-4 text-lg leading-8 text-slate-700">
+            <article className="rounded-[2rem] border border-slate-900/10 dark:border-slate-700/30 bg-[#fff7ed] dark:bg-slate-800/50 p-6">
+              <div className="text-sm font-semibold uppercase tracking-[0.3em] text-[#c85c22] dark:text-orange-400">How it works</div>
+              <p className="mt-4 text-lg leading-8 text-slate-700 dark:text-slate-300">
                 A web proxy sits between the user and the destination website. The user enters a URL, the proxy fetches
                 the remote page, and the response comes back through that intermediary instead of directly from the
                 browser.
               </p>
             </article>
-            <article className="rounded-[2rem] border border-slate-900/10 bg-white p-6">
+            <article className="rounded-[2rem] border border-slate-900/10 dark:border-slate-700/30 bg-white dark:bg-slate-800 p-6">
               <div className="text-sm font-semibold uppercase tracking-[0.3em] text-[#2f5fd0]">Why people use it</div>
-              <p className="mt-4 text-lg leading-8 text-slate-700">
+              <p className="mt-4 text-lg leading-8 text-slate-700 dark:text-slate-300">
                 It helps with geoblocked pages, restrictive local networks, and quick anonymous browsing when users do
                 not want to install dedicated software just to open a site.
               </p>
@@ -295,19 +312,20 @@ export default function App() {
           </div>
         </section>
 
-        <section id="faq" className="rounded-[2rem] border border-slate-900/10 bg-white/75 p-6 sm:p-8">
-          <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">FAQ</div>
+        <section id="faq" className="rounded-[2rem] border border-slate-900/10 dark:border-slate-700/30 bg-white/75 dark:bg-slate-900/50 p-6 sm:p-8">
+          <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">FAQ</div>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight">Common questions</h2>
           <div className="mt-8 grid gap-4">
             {faqItems.map((item) => (
-              <article key={item.question} className="rounded-2xl border border-slate-200 bg-white px-5 py-5">
+              <article key={item.question} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-5 py-5">
                 <h3 className="text-lg font-semibold tracking-tight">{item.question}</h3>
-                <p className="mt-2 text-sm leading-7 text-slate-600">{item.answer}</p>
+                <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-400">{item.answer}</p>
               </article>
             ))}
           </div>
         </section>
       </main>
+    </div>
     </div>
   );
 }
