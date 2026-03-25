@@ -128,6 +128,9 @@ export default function App() {
           <a href="#faq" className="transition hover:text-slate-950">
             FAQ
           </a>
+          <a href="/dashboard" className="rounded-full bg-[#2f5fd0] px-4 py-2 text-white transition hover:bg-[#2547a8]">
+            Dashboard
+          </a>
         </nav>
       </header>
 
