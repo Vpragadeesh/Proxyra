@@ -18,10 +18,23 @@ type Region = {
   badge: string;
 };
 
+type SearchEngine = {
+  id: string;
+  name: string;
+  url: string;
+};
+
 const regions: Region[] = [
   { id: 'eu', label: 'Poland / France', speed: 'Fast', badge: 'Best latency' },
   { id: 'us', label: 'United States', speed: 'Slow', badge: 'Popular region' },
   { id: 'sg', label: 'Singapore', speed: 'Slow', badge: 'Asia gateway' },
+];
+
+const searchEngines: SearchEngine[] = [
+  { id: 'duckduckgo', name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+  { id: 'google', name: 'Google', url: 'https://www.google.com/search?q=' },
+  { id: 'bing', name: 'Bing', url: 'https://www.bing.com/search?q=' },
+  { id: 'startpage', name: 'StartPage', url: 'https://www.startpage.com/sp/search?query=' },
 ];
 
 const featureCards = [
@@ -71,7 +84,7 @@ function looksLikeUrl(value: string) {
   return /^https?:\/\//i.test(value) || /^[^\s]+\.[^\s]+/.test(value);
 }
 
-function resolveInput(value: string) {
+function resolveInput(value: string, searchEngine: SearchEngine) {
   const trimmed = value.trim();
   if (!trimmed) {
     return '';
@@ -85,12 +98,13 @@ function resolveInput(value: string) {
     return `https://${trimmed}`;
   }
 
-  return `https://duckduckgo.com/?q=${encodeURIComponent(trimmed)}`;
+  return `${searchEngine.url}${encodeURIComponent(trimmed)}`;
 }
 
 export default function App() {
   const [url, setUrl] = useState('');
   const [activeRegion, setActiveRegion] = useState<Region>(regions[0]);
+  const [activeSearchEngine, setActiveSearchEngine] = useState<SearchEngine>(searchEngines[0]);
   const [submittedUrl, setSubmittedUrl] = useState('');
   const [error, setError] = useState('');
   const [isDark, setIsDark] = useState(() => {
@@ -104,7 +118,7 @@ export default function App() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const normalizedUrl = resolveInput(url);
+    const normalizedUrl = resolveInput(url, activeSearchEngine);
     if (!normalizedUrl) {
       setError('Enter a website URL or search term to start browsing.');
       return;
@@ -196,6 +210,29 @@ export default function App() {
                   className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-4 py-4 text-base text-slate-950 dark:text-white outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-[#2f5fd0] focus:bg-white dark:focus:bg-slate-700"
                 />
               </label>
+
+              <div>
+                <div className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Search Engine</div>
+                <div className="grid gap-2 grid-cols-2">
+                  {searchEngines.map((engine) => {
+                    const isActive = engine.id === activeSearchEngine.id;
+                    return (
+                      <button
+                        key={engine.id}
+                        type="button"
+                        onClick={() => setActiveSearchEngine(engine)}
+                        className={`rounded-xl border px-3 py-2 text-sm font-medium transition ${
+                          isActive
+                            ? 'border-[#2f5fd0] bg-[#2f5fd0] text-white'
+                            : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {engine.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               <div>
                 <div className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Country</div>
