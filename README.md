@@ -57,8 +57,27 @@ pnpm dev
 Open `http://127.0.0.1:5173`.
 
 The frontend now reads the backend URL from `VITE_BACKEND_URL` in `.env`, and the backend reads Rocket config from `ROCKET_ADDRESS` / `ROCKET_PORT` (or `PORT` for deploys).
+## Deployment
+
+### Quick Deploy
+
+- **Backend (Render)**: Use the included `Dockerfile` or `render.yaml`
+- **Frontend (Vercel)**: Use the included `vercel.json`
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+
+### Production Environment Variables
+
+Backend (Render):
+- `PORT` - Automatically set by Render (default: 10000)
+- `ROCKET_ADDRESS` - Set to `0.0.0.0`
+
+Frontend (Vercel):
+- `VITE_BACKEND_URL` - Your Render backend URL (e.g., `https://proxyra-backend.onrender.com`)
+
 ## Notes
 
 - The backend supports `GET /health`, `GET /proxy`, and `POST /proxy`.
 - HTML responses are rewritten so links, forms, scripts, and assets continue loading through the proxy route.
 - Some websites may still resist proxying because of CSP, bot checks, or advanced client-side protections.
+- CORS is enabled for all origins - consider restricting in production.

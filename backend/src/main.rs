@@ -17,6 +17,7 @@ use rocket::response::content::RawHtml;
 use rocket::response::{Responder, Response};
 use rocket::serde::json::Json;
 use rocket::{Build, Data, Request, Rocket, State};
+use rocket_cors::{AllowedOrigins, CorsOptions};
 use serde::Serialize;
 use url::Url;
 
@@ -411,11 +412,24 @@ fn rocket() -> Rocket<Build> {
         ..rocket::Config::default()
     };
 
+    let cors = CorsOptions::default()
+        .allowed_origins(AllowedOrigins::all())
+        .allowed_methods(
+            vec!["GET", "POST", "OPTIONS"]
+                .into_iter()
+                .map(|s| s.parse().unwrap())
+                .collect(),
+        )
+        .allow_credentials(true)
+        .to_cors()
+        .expect("CORS configuration");
+
     rocket::custom(config)
         .manage(AppState {
             client,
             allowed_regions: Arc::new(vec!["eu", "us", "sg"]),
         })
+        .attach(cors)
         .register("/", catchers![default_catcher])
         .mount("/", routes![health, proxy_get, proxy_post, options_catch_all])
 }
