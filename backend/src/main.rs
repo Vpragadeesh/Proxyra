@@ -199,7 +199,7 @@ fn normalize_target(raw: &str) -> Result<Url, ProxyError> {
         format!("https://{trimmed}")
     } else {
         let query = url::form_urlencoded::byte_serialize(trimmed.as_bytes()).collect::<String>();
-        format!("https://www.google.com/search?q={query}")
+        format!("https://duckduckgo.com/?q={query}")
     };
 
     let parsed = Url::parse(&candidate)

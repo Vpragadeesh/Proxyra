@@ -83,7 +83,7 @@ function resolveInput(value: string) {
     return `https://${trimmed}`;
   }
 
-  return `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`;
+  return `https://duckduckgo.com/?q=${encodeURIComponent(trimmed)}`;
 }
 
 export default function App() {
