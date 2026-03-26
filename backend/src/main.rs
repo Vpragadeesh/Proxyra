@@ -3,8 +3,10 @@ extern crate rocket;
 
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
+use std::thread;
 use std::time::Duration;
 
+use chrono;
 use kuchiki::traits::*;
 use reqwest::header::{
     HeaderMap as ReqwestHeaderMap, HeaderName as ReqwestHeaderName, HeaderValue as ReqwestHeaderValue,
@@ -387,8 +389,21 @@ fn default_catcher(status: Status, request: &Request<'_>) -> RawHtml<String> {
     ))
 }
 
+fn spawn_keepalive_thread() {
+    thread::spawn(|| {
+        loop {
+            thread::sleep(Duration::from_secs(600)); // 10 minutes
+            let timestamp = chrono::Local::now().format("%Y-%m-%d %H:%M:%S");
+            println!("[{}] 🔄 Backend alive and processing requests...", timestamp);
+        }
+    });
+}
+
 fn rocket() -> Rocket<Build> {
     dotenvy::dotenv().ok();
+
+    // Spawn keepalive thread to prevent idle shutdown
+    spawn_keepalive_thread();
 
     let client = Client::builder()
         .redirect(reqwest::redirect::Policy::limited(10))
